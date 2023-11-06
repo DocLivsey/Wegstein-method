@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Polynomial {
@@ -18,7 +19,7 @@ public class Polynomial {
         {
             this.polynomialDegree = strArr.length;
             this.polynomialCoefficients = new TreeMap<>();
-            System.out.println("Они записаны по возрастанию или оп убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
+            System.out.println("Они записаны по возрастанию или по убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
             answer = scanMsg.nextLine();
             switch (answer)
             {
@@ -51,7 +52,7 @@ public class Polynomial {
         {
             this.polynomialDegree = coefficients.getVectorSize();
             this.polynomialCoefficients = new TreeMap<>();
-            System.out.println("Они записаны по возрастанию или оп убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
+            System.out.println("Они записаны по возрастанию или по убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
             answer = scanMsg.nextLine();
             switch (answer)
             {
@@ -96,8 +97,13 @@ public class Polynomial {
         if (Main.isNumeric(degree))
             return this.polynomialCoefficients.get("X^" + degree);
         else
-            System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
-        return Double.NaN;
+        {
+            if (this.polynomialCoefficients.containsKey(degree))
+                return this.polynomialCoefficients.get(degree);
+            else
+                System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
+            return Double.NaN;
+        }
     }
     Set<String> getDegrees(Double coefficient)
     { return this.polynomialCoefficients.keySet(); }
@@ -116,5 +122,37 @@ public class Polynomial {
         }
         else
             System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
+    }
+    void print()
+    {
+        int count = 1;
+        for (Map.Entry<String, Double> entry : this.polynomialCoefficients.entrySet())
+        {
+            if (count < this.polynomialDegree)
+            {
+                System.out.print(entry.getValue() + entry.getKey() + " + ");
+                count++;
+            }
+            else
+                System.out.print(entry.getValue() + entry.getKey());
+        }
+    }
+    void printFormatted()
+    {
+        int count = 1;
+        for (Map.Entry<String, Double> entry : this.polynomialCoefficients.entrySet())
+        {
+            DecimalFormat shortOut = new DecimalFormat("#.##");
+            String result = shortOut.format(entry.getValue());
+            if (count < this.polynomialDegree)
+            {
+                System.out.print(result + entry.getKey() + " + ");
+                count++;
+            }
+            else
+            {
+                System.out.print(result + entry.getKey());
+            }
+        }
     }
 }

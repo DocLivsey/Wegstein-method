@@ -9,16 +9,15 @@ public class Main {
     public static final String HEADER_OUTPUT = "\u001B[36m"; // CYAN
     public static boolean isNumeric(String string)
     {
-        System.out.printf("Parsing string: \"%s\"%n", string);
         if(string == null || string.isEmpty()) {
-            System.out.println("String cannot be parsed, it is null or empty.");
+            System.out.println(Main.ERROR + "String cannot be parsed, it is null or empty." + Main.RESET);
             return false;
         }
         try {
-            int intValue = Integer.parseInt(string);
+            Integer.parseInt(string);
             return true;
         } catch (NumberFormatException e) {
-            System.out.println("Input String cannot be parsed to Integer.");
+            System.out.println(Main.ERROR + "Input String cannot be parsed to Integer." + Main.RESET);
         }
         return false;
     }
@@ -30,5 +29,6 @@ public class Main {
 
         path = "src/coefficientInput.txt";
         Polynomial polynomial = new Polynomial(path);
+        polynomial.printFormatted();
     }
 }
