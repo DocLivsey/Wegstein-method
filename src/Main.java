@@ -10,7 +10,9 @@ public class Main {
     public static void main(String[] args) throws IOException{
         String path = "src";
         File thisDir = new File(path);
-        Vector vector = new Vector(3);
-        vector.writeInDesiredFolder(thisDir);
+        Vector vector = new Vector(3); vector.createVector();
+        //vector.writeInDesiredFolder(thisDir);
+
+        Polynomial polynomial = new Polynomial(vector);
     }
 }
