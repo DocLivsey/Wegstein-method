@@ -1,8 +1,47 @@
+import java.io.*;
 import java.util.*;
 
 public class Polynomial {
-    protected TreeMap<String, Double> coefficients;
+    protected TreeMap<String, Double> polynomialCoefficients;
     protected int polynomialDegree;
+    Polynomial(String pathToFile) throws FileNotFoundException
+    {
+        File input = new File(pathToFile);
+        Scanner scan = new Scanner(input);
+        String line = scan.nextLine();
+        String[] strArr = line.trim().split("\\s+");
+
+        Scanner scanMsg = new Scanner(System.in);
+        System.out.println(Main.COMMENT + "Вы уверены, что коэффициенты записаны упорядоченно?");
+        String answer = scanMsg.nextLine();
+        if (answer.equals("yes") || answer.equals("Yes") || answer.equals("Да") || answer.equals("да"))
+        {
+            this.polynomialDegree = strArr.length;
+            this.polynomialCoefficients = new TreeMap<>();
+            System.out.println("Они записаны по возрастанию или оп убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
+            answer = scanMsg.nextLine();
+            switch (answer)
+            {
+                case "1":
+                    for (int i = 0; i < this.polynomialDegree; i++)
+                        this.polynomialCoefficients.put("X^" + i, Double.parseDouble(strArr[i]));
+                    break;
+                case "2":
+                    for (int i = 0; i < this.polynomialDegree; i++)
+                        this.polynomialCoefficients.put("X^" + (this.polynomialDegree - i), Double.parseDouble(strArr[i]));
+                    break;
+                default:
+                    this.polynomialDegree = 0;
+                    this.polynomialCoefficients = null;
+                    break;
+            }
+        }
+        else
+        {
+            this.polynomialDegree = 0;
+            this.polynomialCoefficients = null;
+        }
+    }
     Polynomial(Vector coefficients)
     {
         Scanner scanMsg = new Scanner(System.in);
@@ -11,29 +50,29 @@ public class Polynomial {
         if (answer.equals("yes") || answer.equals("Yes") || answer.equals("Да") || answer.equals("да"))
         {
             this.polynomialDegree = coefficients.getVectorSize();
-            this.coefficients = new TreeMap<>();
+            this.polynomialCoefficients = new TreeMap<>();
             System.out.println("Они записаны по возрастанию или оп убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
             answer = scanMsg.nextLine();
             switch (answer)
             {
                 case "1":
                     for (int i = 0; i < this.polynomialDegree; i++)
-                        this.coefficients.put("x^" + (this.polynomialDegree - i), coefficients.getItem(i));
+                        this.polynomialCoefficients.put("X^" + i, coefficients.getItem(i));
                     break;
                 case "2":
                     for (int i = 0; i < this.polynomialDegree; i++)
-                        this.coefficients.put("x^" + i, coefficients.getItem(i));
+                        this.polynomialCoefficients.put("X^" + (this.polynomialDegree - i), coefficients.getItem(i));
                     break;
                 default:
                     this.polynomialDegree = 0;
-                    this.coefficients = null;
+                    this.polynomialCoefficients = null;
                     break;
             }
         }
         else
         {
             this.polynomialDegree = 0;
-            this.coefficients = null;
+            this.polynomialCoefficients = null;
         }
     }
     Polynomial()
@@ -42,11 +81,40 @@ public class Polynomial {
         System.out.println(Main.INPUT + "Введите степень полинома" + Main.RESET);
         this.polynomialDegree = scanPolynomial.nextInt();
         System.out.println(Main.INPUT + "Введите коэффициенты при соответсвущих степенях" + Main.RESET);
-        this.coefficients = new TreeMap<>();
+        this.polynomialCoefficients = new TreeMap<>();
         for (int i = 0; i < this.polynomialDegree; i++)
         {
             System.out.print("x^" + (this.polynomialDegree - i) + ": ");
-            this.coefficients.put("x^" + (this.polynomialDegree - i), scanPolynomial.nextDouble());
+            this.polynomialCoefficients.put("X^" + (this.polynomialDegree - i), scanPolynomial.nextDouble());
         }
+    }
+    int getPolynomialDegree() { return this.polynomialDegree; }
+    TreeMap<String, Double> getPolynomialCoefficients()
+    { return this.polynomialCoefficients; }
+    Double getCoefficient(String degree)
+    {
+        if (Main.isNumeric(degree))
+            return this.polynomialCoefficients.get("X^" + degree);
+        else
+            System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
+        return Double.NaN;
+    }
+    Set<String> getDegrees(Double coefficient)
+    { return this.polynomialCoefficients.keySet(); }
+    void setPolynomialDegree(int polynomialDegree)
+    { this.polynomialDegree = polynomialDegree; }
+    void setPolynomialCoefficients(TreeMap<String, Double> polynomialCoefficients)
+    { this.polynomialCoefficients = polynomialCoefficients; }
+    void setCoefficientForDegree(String degree, Double coefficient)
+    {
+        if (Main.isNumeric(degree))
+        {
+            if (this.polynomialCoefficients.containsKey("X^" + degree))
+                this.polynomialCoefficients.put("X^" + degree, coefficient);
+            else
+                System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
+        }
+        else
+            System.out.println(Main.ERROR + "Такой степени нет в полиноме" + Main.RESET);
     }
 }

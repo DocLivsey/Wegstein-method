@@ -108,7 +108,7 @@ public class Vector {
         }
         fileWriter.close();
     }
-    void writeInDesiredFolder(File folder) throws IOException {
+    void writeInDesiredFolder(File folder) throws IOException { // SOME SHIT
         for (String file : Objects.requireNonNull(folder.list()))
             if (!file.equals("vectorOutput.txt"))
             {

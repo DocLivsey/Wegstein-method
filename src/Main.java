@@ -7,12 +7,28 @@ public class Main {
     public static final String CHOOSE = "\u001B[34m"; // BLUE
     public static final String OUTPUT = "\u001B[35m"; // PURPLE
     public static final String HEADER_OUTPUT = "\u001B[36m"; // CYAN
+    public static boolean isNumeric(String string)
+    {
+        System.out.printf("Parsing string: \"%s\"%n", string);
+        if(string == null || string.isEmpty()) {
+            System.out.println("String cannot be parsed, it is null or empty.");
+            return false;
+        }
+        try {
+            int intValue = Integer.parseInt(string);
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println("Input String cannot be parsed to Integer.");
+        }
+        return false;
+    }
     public static void main(String[] args) throws IOException{
         String path = "src";
         File thisDir = new File(path);
-        Vector vector = new Vector(3); vector.createVector();
+        Vector vector = new Vector(3); //vector.createVector();
         //vector.writeInDesiredFolder(thisDir);
 
-        Polynomial polynomial = new Polynomial(vector);
+        path = "src/coefficientInput.txt";
+        Polynomial polynomial = new Polynomial(path);
     }
 }
