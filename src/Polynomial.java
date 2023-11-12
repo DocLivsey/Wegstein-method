@@ -1,5 +1,5 @@
 import java.io.*;
-import java.text.DecimalFormat;
+import java.text.*;
 import java.util.*;
 
 public class Polynomial {
