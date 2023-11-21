@@ -1,7 +1,6 @@
 import java.io.*;
 import java.text.*;
 import java.util.*;
-
 public class Polynomial {
     protected TreeMap<String, Double> polynomialCoefficients;
     protected int polynomialDegree;
@@ -10,37 +9,71 @@ public class Polynomial {
         File input = new File(pathToFile);
         Scanner scan = new Scanner(input);
         String line = scan.nextLine();
-        String[] strArr = line.trim().split("\\s+");
+        this.polynomialCoefficients = new TreeMap<>();
 
-        Scanner scanMsg = new Scanner(System.in);
-        System.out.println(Main.COMMENT + "Вы уверены, что коэффициенты записаны упорядоченно?");
-        String answer = scanMsg.nextLine();
-        if (answer.equals("yes") || answer.equals("Yes") || answer.equals("Да") || answer.equals("да"))
+        if (MathBase.severalNumeric(line))
         {
-            this.polynomialDegree = strArr.length;
-            this.polynomialCoefficients = new TreeMap<>();
-            System.out.println("Они записаны по возрастанию или по убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
-            answer = scanMsg.nextLine();
-            switch (answer)
+            String[] strCoefficients = line.trim().split("\\s+");
+
+            Scanner scanMsg = new Scanner(System.in);
+            System.out.println(Main.COMMENT + "Вы уверены, что коэффициенты записаны упорядоченно?");
+            String answer = scanMsg.nextLine();
+            if (answer.equals("yes") || answer.equals("Yes") || answer.equals("Да") || answer.equals("да"))
             {
-                case "1":
-                    for (int i = 0; i < this.polynomialDegree; i++)
-                        this.polynomialCoefficients.put("X^" + i, Double.parseDouble(strArr[i]));
-                    break;
-                case "2":
-                    for (int i = 0; i < this.polynomialDegree; i++)
-                        this.polynomialCoefficients.put("X^" + (this.polynomialDegree - i), Double.parseDouble(strArr[i]));
-                    break;
-                default:
-                    this.polynomialDegree = 0;
-                    this.polynomialCoefficients = null;
-                    break;
+                this.polynomialDegree = strCoefficients.length;
+                System.out.println("Они записаны по возрастанию или по убыванию? \n" + "1 - по возрастанию, 2 - по убыванию" + Main.RESET);
+                answer = scanMsg.nextLine();
+                switch (answer)
+                {
+                    case "1":
+                        for (int i = 0; i < this.polynomialDegree; i++)
+                            this.polynomialCoefficients.put("X^" + i, Double.parseDouble(strCoefficients[i]));
+                        break;
+                    case "2":
+                        for (int i = 0; i < this.polynomialDegree; i++)
+                            this.polynomialCoefficients.put("X^" + (this.polynomialDegree - i), Double.parseDouble(strCoefficients[i]));
+                        break;
+                    default:
+                        this.polynomialDegree = 0;
+                        this.polynomialCoefficients = null;
+                        break;
+                }
+            }
+            else
+            {
+                this.polynomialDegree = 0;
+                this.polynomialCoefficients = null;
             }
         }
+
         else
         {
-            this.polynomialDegree = 0;
-            this.polynomialCoefficients = null;
+            String[] monomials = line.replaceAll("\\s", "").split("[+]+");
+            for (String monomial : monomials)
+            {
+                String[] splitMonomial = monomial.split("[*]+");
+                if (splitMonomial.length < 2) {
+                    String[] tmpSplit = splitMonomial[0].split("");
+                    if (splitMonomial[0].contains("-")) {
+                        if (tmpSplit[1].contains("^"))
+                            this.polynomialCoefficients.put(tmpSplit[1], -1.0);
+                        else
+                            this.polynomialCoefficients.put(tmpSplit[1] + "^1", -1.0);
+                    } else {
+                        if (tmpSplit[1].contains("^"))
+                            this.polynomialCoefficients.put(tmpSplit[1], 1.0);
+                        else
+                            this.polynomialCoefficients.put(tmpSplit[1] + "^1", 1.0);
+                    }
+                }
+                else
+                {
+                    if(MathBase.isNumeric(splitMonomial[0]))
+                        this.polynomialCoefficients.put(splitMonomial[1], Double.parseDouble(splitMonomial[0]));
+                    else System.out.println("Че за хуйню ты ввел?");
+                }
+                this.polynomialDegree = monomials.length;
+            }
         }
     }
     Polynomial(Vector coefficients)
@@ -94,7 +127,7 @@ public class Polynomial {
     { return this.polynomialCoefficients; }
     Double getCoefficient(String degree)
     {
-        if (Main.isNumeric(degree))
+        if (MathBase.isNumeric(degree))
             return this.polynomialCoefficients.get("X^" + degree);
         else
         {
@@ -113,7 +146,7 @@ public class Polynomial {
     { this.polynomialCoefficients = polynomialCoefficients; }
     void setCoefficientForDegree(String degree, Double coefficient)
     {
-        if (Main.isNumeric(degree))
+        if (MathBase.isNumeric(degree))
         {
             if (this.polynomialCoefficients.containsKey("X^" + degree))
                 this.polynomialCoefficients.put("X^" + degree, coefficient);

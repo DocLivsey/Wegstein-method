@@ -1,4 +1,5 @@
 import java.io.*;
+
 public class Main {
     public static final String RESET = "\u001B[0m";
     public static final String ERROR = "\u001B[31m"; // RED
@@ -7,28 +8,12 @@ public class Main {
     public static final String CHOOSE = "\u001B[34m"; // BLUE
     public static final String OUTPUT = "\u001B[35m"; // PURPLE
     public static final String HEADER_OUTPUT = "\u001B[36m"; // CYAN
-    public static boolean isNumeric(String string)
-    {
-        if(string == null || string.isEmpty()) {
-            System.out.println(Main.ERROR + "String cannot be parsed, it is null or empty." + Main.RESET);
-            return false;
-        }
-        try {
-            Integer.parseInt(string);
-            return true;
-        } catch (NumberFormatException e) {
-            System.out.println(Main.ERROR + "Input String cannot be parsed to Integer." + Main.RESET);
-        }
-        return false;
-    }
     public static void main(String[] args) throws IOException{
-        String path = "src";
-        File thisDir = new File(path);
-        Vector vector = new Vector(3); //vector.createVector();
-        //vector.writeInDesiredFolder(thisDir);
+        String pathToPoints = "src/pointsInput.txt";
+        String pathToCoefficients = "src/coefficientsInput.txt";
+        String pathToFunction = "src/functionInput.txt";
 
-        path = "src/coefficientInput.txt";
-        Polynomial polynomial = new Polynomial(path);
-        polynomial.printFormatted();
+        String func = "(x + 2) + (x - 1)";
+        MathFunctionActions function = new MathFunctionActions(); function.splitByBrackets(func);
     }
 }

@@ -93,27 +93,71 @@ public class Vector {
         System.out.println("}" + Main.RESET);
     }
     void writeInFile(String pathToFile) throws IOException {
-        FileWriter fileWriter = new FileWriter(pathToFile);
-        for (int i = 0; i < this.vectorSize; i++)
-            fileWriter.write(this.getItem(i) + " ");
-        fileWriter.close();
-    }
-    void writeFormattedInFile(String pathToFile) throws IOException {
-        FileWriter fileWriter = new FileWriter(pathToFile);
-        for (int i = 0; i < this.vectorSize; i++)
+        File output = new File(pathToFile);
+        FileWriter fileWriter = new FileWriter(output);
+        if (output.exists())
         {
-            DecimalFormat shortOut = new DecimalFormat("#.##");
-            String result = shortOut.format(this.getItem(i));
-            fileWriter.write(result + " ");
+            for (int i = 0; i < this.vectorSize; i++)
+                fileWriter.write(this.getItem(i) + " ");
+        }
+        else
+        {
+            boolean created = output.createNewFile();
+            if (created)
+            {
+                for (int i = 0; i < this.vectorSize; i++)
+                    fileWriter.write(this.getItem(i) + " ");
+            }
+            else
+            { System.out.println("Файл не создан по указанному пути"); }
         }
         fileWriter.close();
     }
-    void writeInDesiredFolder(File folder) throws IOException { // SOME SHIT
-        for (String file : Objects.requireNonNull(folder.list()))
-            if (!file.equals("vectorOutput.txt"))
+    void writeFormattedInFile(String pathToFile) throws IOException {
+        File output = new File(pathToFile);
+        FileWriter fileWriter = new FileWriter(output);
+        if (output.exists())
+        {
+            for (int i = 0; i < this.vectorSize; i++)
             {
-                File output = new File("vectorOutput.txt");
+                DecimalFormat shortOut = new DecimalFormat("#.##");
+                String result = shortOut.format(this.getItem(i));
+                fileWriter.write(result + " ");
             }
+        }
+        else
+        {
+            boolean created = output.createNewFile();
+            if (created)
+            {
+                for (int i = 0; i < this.vectorSize; i++)
+                {
+                    DecimalFormat shortOut = new DecimalFormat("#.##");
+                    String result = shortOut.format(this.getItem(i));
+                    fileWriter.write(result + " ");
+                }
+            }
+            else
+            { System.out.println("Файл не создан по указанному пути"); }
+        }
+        fileWriter.close();
+    }
+    void writeInDesiredFolder(String pathToFolder) throws IOException {
+        String pathToFile = pathToFolder + "/output.txt";
+        this.writeInFile(pathToFile);
+    }
+    void writeInDesiredFolder(String pathToFolder, String fileName) throws IOException {
+        String pathToFile = pathToFolder + "/" + fileName;
+        System.out.println(pathToFile);
+        this.writeInFile(pathToFile);
+    }
+    void writeFormattedInDesiredFolder(String pathToFolder) throws IOException {
+        String pathToFile = pathToFolder + "/output.txt";
+        this.writeFormattedInFile(pathToFile);
+    }
+    void writeFormattedInDesiredFolder(String pathToFolder, String fileName) throws IOException {
+        String pathToFile = pathToFolder + "/" + fileName;
+        this.writeFormattedInFile(pathToFile);
     }
     void addItem(double item)
     {
