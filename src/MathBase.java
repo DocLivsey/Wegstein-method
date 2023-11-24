@@ -17,7 +17,7 @@ public class MathBase {
             return false;
         }
         try {
-            Integer.parseInt(string);
+            Double.parseDouble(string);
             return true;
         } catch (NumberFormatException e) {
             System.out.println(Main.ERROR + "Input String cannot be parsed to Integer." + Main.RESET);

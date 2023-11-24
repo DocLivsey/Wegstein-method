@@ -2,7 +2,7 @@ public class Point2D {
     protected double x;
     protected double y;
     Point2D()
-    { this.x = 0; this.y = 0; }
+    { this.x = Double.NaN; this.y = Double.NaN; }
     Point2D(double x, double y)
     { this.x = x; this.y = y; }
     public double getX() { return x; }
@@ -19,7 +19,17 @@ public class Point2D {
     { return super.equals(obj); }
     public Point2D clone() throws CloneNotSupportedException
     { return (Point2D) super.clone(); }
-    public static Point2D createFromStringPair(String pair)
+    public static  Point2D setXFromString(String xStr)
+    {
+        double x;
+        if (MathBase.isNumeric(xStr))
+        {
+            x = Double.parseDouble(xStr.trim());
+            return new Point2D(x, Double.NaN);
+        }
+        return new Point2D();
+    }
+    public static Point2D setPairFromString(String pair)
     {
         double x, y;
         if (MathBase.severalNumeric(pair))

@@ -1,4 +1,4 @@
 @FunctionalInterface
 public interface MathFunction {
-    double function(Point2D point2D);
+    Point2D function(double x);
 }
