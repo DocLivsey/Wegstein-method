@@ -87,6 +87,10 @@ public class MathFunctionOperations extends MathBase {
             }
         }
     }
+    public void writePointsInFile()
+    {
+
+    }
     public LinkedList<String> splitByBrackets(String function)
     {
         LinkedList<String> byBrackets = new LinkedList<>();

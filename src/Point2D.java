@@ -41,6 +41,7 @@ public class Point2D {
         }
         return new Point2D();
     }
+    public String pointToString() {return null;}
     public void print()
     { System.out.println("{ " + this.x + "; " + this.y + " }"); }
 }

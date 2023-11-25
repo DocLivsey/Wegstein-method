@@ -14,7 +14,7 @@ public class Main {
         String pathToFunction = "src/functionInput.txt";
 
         MathFunction mathFunction = (x) -> {
-            return new Point2D(x, Math.sin(x));
+            return new Point2D(x, x * x - x);
         };
 
         MathFunctionOperations mathFunctionOperations = new MathFunctionOperations(pathToPoints, mathFunction);
@@ -24,6 +24,6 @@ public class Main {
         EquationSolving equation = new EquationSolving(pathToPoints, mathFunction);
         System.out.println(equation.differentialAbsoluteGrade());
 
-        equation.wegsteinMethod();
+        //equation.wegsteinMethod();
     }
 }
