@@ -14,15 +14,13 @@ public class Main {
         String pathToFunction = "src/functionInput.txt";
 
         MathFunction mathFunction = (x) -> {
-            return new Point2D(x, x * x - x);
+            return new Point2D(x, (x - 1) * (x + 3));
         };
 
-        MathFunctionOperations mathFunctionOperations = new MathFunctionOperations(pathToPoints, mathFunction);
-        mathFunctionOperations.printPoints();
-        System.out.println(mathFunctionOperations.differential(mathFunctionOperations.getPoint(0)));
-
-        EquationSolving equation = new EquationSolving(pathToPoints, mathFunction);
-        System.out.println(equation.differentialAbsoluteGrade());
+        IterationSolving equation = new IterationSolving(pathToPoints, mathFunction);
+        System.out.println(equation.differentialAbsoluteGradeOfPhi());
+        equation.printPoints();
+        equation.getPhi().printPoints();
 
         //equation.wegsteinMethod();
     }

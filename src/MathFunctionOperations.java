@@ -57,9 +57,12 @@ public class MathFunctionOperations extends MathBase {
     { return new MathFunctionOperations(this.points, this.mathFunction); }
     public void printPoints()
     {
+        System.out.println(Main.HEADER_OUTPUT + "Точки Функции:" + Main.RESET);
         for (Point2D point : this.points)
             point.print();
     }
+    public void printFunction()
+    { System.out.println(super.toString()); }
     public Point2D calculatePoint(double x)
     { return this.mathFunction.function(x); }
     public double differential(Point2D point)
