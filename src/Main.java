@@ -13,15 +13,22 @@ public class Main {
         String pathToCoefficients = "src/coefficientsInput.txt";
         String pathToFunction = "src/functionInput.txt";
 
-        MathFunction mathFunction = (x) -> {
+        MathFunction firstExample = (x) -> {
             return new Point2D(x, (x - 1) * (x + 3));
         };
 
-        IterationSolving equation = new IterationSolving(pathToPoints, mathFunction);
-        System.out.println(equation.differentialAbsoluteGradeOfPhi());
+        MathFunction secondExample = (x) -> {
+            return new Point2D(x, Math.abs(x));
+        };
+
+        IterationSolving equation = new IterationSolving(pathToPoints, firstExample);
         equation.printPoints();
         equation.getPhi().printPoints();
 
+        equation.printInitSolutions();
+        equation.printDifferentials();
+
+        equation.calculateInitSolutions();
         //equation.wegsteinMethod();
     }
 }

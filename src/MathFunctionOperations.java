@@ -61,15 +61,34 @@ public class MathFunctionOperations extends MathBase {
         for (Point2D point : this.points)
             point.print();
     }
+    public void printDifferentials()
+    {
+        System.out.println(Main.HEADER_OUTPUT + "Производная Функции в точках:" + Main.RESET);
+        for (Point2D point : this.points)
+            new Point2D(point.getX(), this.differential(point)).print();
+    }
     public void printFunction()
     { System.out.println(super.toString()); }
     public Point2D calculatePoint(double x)
-    { return this.mathFunction.function(x); }
+    {
+        if (Math.abs(this.mathFunction.function(x).getY()) < super.getEpsilon())
+            return new Point2D(x, 0);
+        return this.mathFunction.function(x);
+    }
     public double differential(Point2D point)
     {
         double dx = point.getX() + super.getEpsilon();
         double dy = this.calculatePoint(dx).getY() - point.getY();
         return dy / super.getEpsilon();
+    }
+    public double differentialAbsoluteGrade()
+    {
+        double absMax = Math.abs(this.differential(this.getPoint(0)));
+        for (Point2D point : this.getPoints())
+            absMax = Math.max(absMax, Math.abs(this.differential(point)));
+        if (absMax == Double.POSITIVE_INFINITY)
+            return 1 / super.getEpsilon();
+        return absMax;
     }
     public void readPointsFromFile(String pathToFile) throws FileNotFoundException {
         File input = new File(pathToFile);
