@@ -9,7 +9,7 @@ public class IterationSolving extends EquationSolving {
         super(pathToPoints, mathFunction);
         this.phi = new IterativeFunctionOperations(pathToPoints, mathFunction);
         for (int i = 0; i < super.points.size(); i++)
-            this.phi.setPoint(i, this.phi.calculatePoint(super.getPoint(i).getX(), this.calculateLambda(getPoint(i))));
+            this.phi.setPoint(i, this.phi.calculatePoint(super.getPoint(i).getX(), this.phi.calculateLambda(getPoint(i))));
         this.initSolutions = new ArrayList<>();
     }
     IterationSolving(ArrayList<Point2D> points, MathFunction mathFunction, IterativeFunctionOperations phi)
@@ -40,42 +40,66 @@ public class IterationSolving extends EquationSolving {
         for (Point2D point : this.initSolutions)
             point.print();
     }
-    public double calculateLambda(Point2D point2D)
-    { return 1 / super.differential(point2D); }
-    public double calculateStep(double leftBorder, double rightBorder)
-    { return rightBorder / (rightBorder - leftBorder); }
-
     public void calculateInitSolutions()
     {
-        double leftBorder = this.getPoint(0).getX();
-        double rightBorder = this.getPoint(this.points.size() - 1).getX();
-        System.out.println(this.calculateStep(leftBorder, rightBorder));
+        Point2D leftBorder;
+        Point2D rightBorder;
+        for (int i = 0; i < super.getPoints().size() - 1; i++)
+        {
+            leftBorder = super.getPoint(i);
+            rightBorder = super.getPoint(i + 1);
+            if (leftBorder.getY() * rightBorder.getY() < 0)
+                this.addInitSolution(leftBorder);
+            else if (leftBorder.getY() == 0)
+                this.addSolution(leftBorder);
+        }
+    }
+    public double differentialAbsoluteGrade()
+    {
+
+        double absMax = Math.abs(super.differential(super.getPoint(0)));
+        for (Point2D point : super.getPoints())
+            absMax = Math.max(absMax, Math.abs(super.differential(point)));
+        if (absMax == Double.POSITIVE_INFINITY)
+            return 1 / super.getEpsilon();
+        return absMax;
     }
     public void wegsteinMethod()
     {
-        double solution;
-        double q = super.differentialAbsoluteGrade();
+        this.calculateInitSolutions();
+        double q = this.differentialAbsoluteGrade();
         System.out.println("q = " + q + "; " + super.getEpsilon() * (1 - q) / q);
-        double x0 = this.getInitSolution(0).getX(), x1, x2, y0;
-        boolean flag = true; int it = 0;
-        x1 = this.phi.calculatePoint(x0).getY();
-        x2 = this.phi.calculatePoint(x1).getY();
-        if (Math.abs(x1 - x0) > super.getEpsilon() * (1 - q) / q)
+        for (Point2D initSolution : this.initSolutions)
         {
+            initSolution.print();
+            double x0 = initSolution.getX(), ξ = x0, x1, x2, lambda;
+            int it = 0;
+            lambda = this.phi.calculateLambda(super.calculatePoint(x0));
+            x1 = this.phi.calculatePoint(x0, lambda).getY();
             double x0_tmp = x0, x1_tmp = x1;
-            do {
-                System.out.println("iteration " + it); it++;
-                System.out.println("x1 = " + x1 + " x2 = " + x2 + " x0tmp = " + x0_tmp + " x1tmp = " + x1_tmp);
-                double x2_tmp = (x2 * x0_tmp - x1 * x1_tmp) / (x2 + x0_tmp - x1 - x1_tmp);
-                x0 = x1; x0_tmp = x1_tmp; x1 = x2; x1_tmp = x2_tmp;
-                System.out.println("x0 = " + x0 + " x1 = " + x1 + " x0tmp = " + x0_tmp + " x1tmp = " + x1_tmp);
-                if (Math.abs(x2 - x1_tmp) > super.getEpsilon() * (1 - q) / q)
-                    flag = false;
-            } while (flag && it <= 1000);
-            solution = x2;
-            y0 = super.calculatePoint(x2).getY();
-            System.out.println("x = " + solution + " f(x) = " + y0);
-            System.out.println("x2 = " + x2 + " |phi`(x2)| = " + Math.abs(this.phi.differential(new Point2D(x2, y0))));
+            if (Math.abs(x1 - x0) > super.getEpsilon() * (1 - q) / q)
+            {
+                do {
+                    System.out.println("iteration " + it);
+                    it++;
+                    lambda = this.phi.calculateLambda(super.calculatePoint(x1));
+                    x2 = this.phi.calculatePoint(x1, lambda).getY();
+                    System.out.println("x1 = " + x1 + " lambda = " + lambda);
+                    System.out.println("x1 = " + x1 + " x2 = " + x2 + " x0tmp = " + x0_tmp + " x1tmp = " + x1_tmp);
+                    double x2_tmp = (x2 * x0_tmp - x1 * x1_tmp) / (x2 + x0_tmp - x1 - x1_tmp);
+                    x0 = x1;
+                    x0_tmp = x1_tmp;
+                    x1 = x2;
+                    x1_tmp = x2_tmp;
+                    ξ = x2;
+                    System.out.println("x0 = " + x0 + " x1 = " + x1 + " x0tmp = " + x0_tmp + " x1tmp = " + x1_tmp);
+                } while (Math.abs(x2 - x1_tmp) > super.getEpsilon() * (1 - q) / q && it <= 1000);
+            }
+            super.addSolution(super.calculatePoint(ξ));
+            System.out.println("x = " + ξ + " f(x) = " + super.calculatePoint(ξ).getY());
+            System.out.println("x2 = " + ξ + " |phi`(x2)| = " + Math.abs(this.phi.differential(super.calculatePoint(ξ))));
         }
+        if (super.getSolutions().isEmpty())
+            System.out.println(Main.ERROR + "Метод Вегстейна корней не нашел" + Main.RESET);
     }
 }

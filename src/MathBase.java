@@ -1,5 +1,5 @@
 public class MathBase {
-    protected final double epsilon = 1E-5;
+    protected final double epsilon = 1E-10;
     public double getEpsilon() { return this.epsilon; }
     @Override
     public boolean equals(Object obj)

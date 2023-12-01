@@ -20,6 +20,8 @@ public class EquationSolving extends MathFunctionOperations {
     public void printSolutions()
     {
         System.out.println(Main.HEADER_OUTPUT + "Решения уравнения" + Main.RESET);
+        if (this.solutions.isEmpty())
+            System.out.println(Main.ERROR + "Решений нет" + Main.RESET);
         for (Point2D point : this.solutions)
             point.print();
     }

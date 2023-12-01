@@ -8,6 +8,7 @@ public class MathFunctionOperations extends MathBase {
         this.points = new ArrayList<>();
         this.readPointsFromFile(pathToPoints);
         this.mathFunction = mathFunction;
+        this.expandPointsArea();
 
         for (int i = 0; i < this.points.size(); i++)
         {
@@ -25,18 +26,14 @@ public class MathFunctionOperations extends MathBase {
     {
         this.points = arguments;
         this.mathFunction = mathFunction;
+        this.expandPointsArea();
     }
     MathFunctionOperations(ArrayList<Point2D> points)
     { this.points = points; }
     MathFunctionOperations()
     {
         this.points = new ArrayList<>();
-        this.mathFunction = new MathFunction() {
-            @Override
-            public Point2D function(double x) {
-                return new Point2D(Double.NaN, Double.NaN);
-            }
-        };
+        this.mathFunction = x -> new Point2D(Double.NaN, Double.NaN);
     }
     public ArrayList<Point2D> getPoints()
     { return this.points; }
@@ -50,11 +47,21 @@ public class MathFunctionOperations extends MathBase {
     { this.mathFunction = mathFunction; }
     public void setPoint(int index, Point2D point2D)
     { this.points.set(index, point2D); }
+    public void addPoint(Point2D point)
+    { this.points.add(point); }
+    public void addPoints(ArrayList<Point2D> points)
+    {
+        for (Point2D point : points)
+            this.addPoint(point);
+        this.sortPoints();
+    }
     @Override
     public boolean equals(Object obj)
     { return super.equals(obj); }
     protected MathFunctionOperations cloneMathFunction()
     { return new MathFunctionOperations(this.points, this.mathFunction); }
+    public void sortPoints()
+    { this.points.sort(Comparator.comparingDouble(Point2D::getX)); }
     public void printPoints()
     {
         System.out.println(Main.HEADER_OUTPUT + "Точки Функции:" + Main.RESET);
@@ -68,11 +75,13 @@ public class MathFunctionOperations extends MathBase {
             new Point2D(point.getX(), this.differential(point)).print();
     }
     public void printFunction()
-    { System.out.println(super.toString()); }
+    { System.out.println(Main.HEADER_OUTPUT + "Функция\n" + Main.OUTPUT + super.toString() + Main.RESET); }
     public Point2D calculatePoint(double x)
     {
         if (Math.abs(this.mathFunction.function(x).getY()) < super.getEpsilon())
             return new Point2D(x, 0);
+        if (Math.abs(this.mathFunction.function(x).getY()) == Double.POSITIVE_INFINITY)
+            return  new Point2D(x, 1 / super.getEpsilon());
         return this.mathFunction.function(x);
     }
     public double differential(Point2D point)
@@ -81,14 +90,24 @@ public class MathFunctionOperations extends MathBase {
         double dy = this.calculatePoint(dx).getY() - point.getY();
         return dy / super.getEpsilon();
     }
-    public double differentialAbsoluteGrade()
+    public double calculateStep(double leftBorder, double rightBorder)
+    { return (rightBorder - leftBorder) / 2; }
+    public void expandPointsArea()
     {
-        double absMax = Math.abs(this.differential(this.getPoint(0)));
-        for (Point2D point : this.getPoints())
-            absMax = Math.max(absMax, Math.abs(this.differential(point)));
-        if (absMax == Double.POSITIVE_INFINITY)
-            return 1 / super.getEpsilon();
-        return absMax;
+        double leftBorder = this.getPoint(0).getX();
+        double rightBorder = this.getPoint(this.points.size() - 1).getX();
+        while (this.points.size() < (rightBorder - leftBorder))
+        {
+            ArrayList<Point2D> addedPoints = new ArrayList<>();
+            for (int i = 0; i < this.points.size() - 1; i++)
+            {
+                double varLeft = this.getPoint(i).getX();
+                double varRight = this.getPoint(i + 1).getX();
+                double step = this.calculateStep(varLeft, varRight);
+                addedPoints.add(this.calculatePoint(varLeft + step));
+            }
+            this.addPoints(addedPoints);
+        }
     }
     public void readPointsFromFile(String pathToFile) throws FileNotFoundException {
         File input = new File(pathToFile);
