@@ -80,7 +80,7 @@ public class MathFunctionOperations extends MathBase {
     {
         if (Math.abs(this.mathFunction.function(x).getY()) < super.getEpsilon())
             return new Point2D(x, 0);
-        if (Math.abs(this.mathFunction.function(x).getY()) == Double.POSITIVE_INFINITY)
+        if (Math.abs(this.mathFunction.function(x).getY()) == Double.POSITIVE_INFINITY || Double.isNaN(this.mathFunction.function(x).getY()))
             return  new Point2D(x, 1 / super.getEpsilon());
         return this.mathFunction.function(x);
     }

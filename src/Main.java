@@ -13,19 +13,11 @@ public class Main {
         String pathToCoefficients = "src/coefficientsInput.txt";
         String pathToFunction = "src/functionInput.txt";
 
-        MathFunction firstExample = (x) -> new Point2D(x, (x - 1) * (x + 3));
-
-        MathFunction secondExample = (x) -> new Point2D(x, Math.sin(x));
-
-        MathFunction thirdExample = (x) -> new Point2D(x, x * x - x);
-
-        MathFunction fourthExample = (x) -> new Point2D(x, Math.abs(x) - 1);
-
-        MathFunction fifthExample = (x) -> new Point2D(x, Math.sin(Math.log(x)));
-
-        IterationSolving equation = new IterationSolving(pathToPoints, fourthExample);
+        MathFunction example = EquationExample.getExamples(10);
+        IterationSolving equation = new IterationSolving(pathToPoints, example);
         equation.printFunction(); equation.printPoints();
         equation.getPhi().printFunction(); equation.getPhi().printPoints();
         equation.wegsteinMethod(); equation.printSolutions();
+        System.out.println(equation.getInitSolutions().size());
     }
 }
