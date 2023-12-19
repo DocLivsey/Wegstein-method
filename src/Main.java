@@ -1,5 +1,4 @@
 import java.io.*;
-
 public class Main {
     public static final String RESET = "\u001B[0m";
     public static final String ERROR = "\u001B[31m"; // RED
@@ -13,11 +12,10 @@ public class Main {
         String pathToCoefficients = "src/coefficientsInput.txt";
         String pathToFunction = "src/functionInput.txt";
 
-        MathFunction example = EquationExample.getExamples(10);
+        MathFunction example = EquationExample.getExamples(7);
         IterationSolving equation = new IterationSolving(pathToPoints, example);
         equation.printFunction(); equation.printPoints();
         equation.getPhi().printFunction(); equation.getPhi().printPoints();
         equation.wegsteinMethod(); equation.printSolutions();
-        System.out.println(equation.getInitSolutions().size());
     }
 }
