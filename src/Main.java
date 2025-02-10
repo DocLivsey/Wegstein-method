@@ -12,7 +12,7 @@ public class Main {
         String pathToCoefficients = "src/coefficientsInput.txt";
         String pathToFunction = "src/functionInput.txt";
 
-        MathFunction example = EquationExample.getExamples(7);
+        MathFunction example = EquationExample.getExamples(2);
         IterationSolving equation = new IterationSolving(pathToPoints, example);
         equation.printFunction(); equation.printPoints();
         equation.getPhi().printFunction(); equation.getPhi().printPoints();
